@@ -1,0 +1,26 @@
+{
+  "name": "gridualizer",
+  "description": "Leaflet-based visualizations of opportunity grids used in Conveyal Analysis software.",
+  "main": "build/lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "mastarm prepublish lib"
+  },
+  "standard": {
+    "parser": "babel-eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/conveyal/gridualizer.git"
+  },
+  "author": "Matthew Wigginton Conway <mconway@conveyal.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/conveyal/gridualizer/issues"
+  },
+  "homepage": "https://github.com/conveyal/gridualizer#readme",
+  "dependencies": {
+    "color": "^0.11.3",
+    "mastarm": "^1.1.1"
+  }
+}
