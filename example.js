@@ -61,7 +61,6 @@ export default class GridualizerExample extends Component {
       case DOT:
         return <ReactDot
           grid={this.state.grid}
-          placement={Dot.halton({})}
           color='rgb(194, 201, 215)' />
       case CHOROPLETH_QUANTILE:
         return <ReactChoropleth
