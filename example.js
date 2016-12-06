@@ -6,7 +6,7 @@ import React, { Component } from 'react'
 import { Map as LeafletMap, TileLayer } from 'react-leaflet'
 import Control from 'react-leaflet-control'
 import { Browser } from 'leaflet'
-import {ReactChoropleth, ReactDot, Choropleth, Dot} from './lib'
+import {ReactChoropleth, ReactDot, Choropleth} from './lib'
 import {createGrid} from 'browsochrones'
 import { render } from 'react-dom'
 
@@ -72,7 +72,7 @@ export default class GridualizerExample extends Component {
       case CHOROPLETH_EQUAL:
         return <ReactChoropleth
           grid={this.state.grid}
-          breaks={Choropleth.quantile({})}
+          breaks={Choropleth.equal({})}
           colors={['#f1eef6', '#bdc9e1', '#74a9cf', '#2b8cbe', '#045a8d']}
           labels={16} />
     }
