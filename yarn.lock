@@ -6507,6 +6507,10 @@ xmlbuilder@2.6.2:
   dependencies:
     lodash "~3.5.0"
 
+xorshift:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/xorshift/-/xorshift-1.0.0.tgz#1d256c2276a235252e5c94f91688f3fb99f4eb61"
+
 xtend@^4.0.0, xtend@^4.0.1, "xtend@>=4.0.0 <4.1.0-0", xtend@~4.0.0:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/xtend/-/xtend-4.0.1.tgz#a5c6d532be656e23db820efb943a1f04998d63af"
