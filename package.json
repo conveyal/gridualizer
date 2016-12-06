@@ -5,7 +5,8 @@
   "scripts": {
     "test": "mastarm lint -S",
     "prepublish": "mastarm prepublish lib -S",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "start": "mastarm build --serve example.js:build/example.js"
   },
   "standard": {
     "parser": "babel-eslint"
@@ -26,7 +27,13 @@
     "mersenne-twister": "^1.1.0"
   },
   "devDependencies": {
+    "browsochrones": "^0.10.0",
+    "leaflet": "0.7",
     "mastarm": "^1.2.0",
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1",
+    "react-leaflet": "0.12",
+    "react-leaflet-control": "^1.2.0",
     "semantic-release": "^4.3.5"
   }
 }
