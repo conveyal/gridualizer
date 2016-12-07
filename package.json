@@ -1,12 +1,12 @@
 {
   "name": "@conveyal/gridualizer",
   "description": "Leaflet-based visualizations of opportunity grids used in Conveyal Analysis software.",
-  "main": "build/lib/index.js",
+  "main": "build/index.js",
   "scripts": {
-    "test": "mastarm lint -S",
-    "prepublish": "mastarm prepublish lib -S",
+    "test": "mastarm lint",
+    "prepublish": "mastarm prepublish lib:build",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "start": "mastarm build --serve example.js:build/example.js"
+    "start": "mastarm build --serve example.js"
   },
   "standard": {
     "parser": "babel-eslint"
@@ -29,7 +29,7 @@
   "devDependencies": {
     "browsochrones": "^0.10.0",
     "leaflet": "0.7",
-    "mastarm": "^1.2.0",
+    "mastarm": "^3.1.1",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "react-leaflet": "0.12",

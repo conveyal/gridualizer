@@ -14,7 +14,7 @@ const DOT = 'dot'
 const CHOROPLETH_QUANTILE = 'choropleth quantile'
 const CHOROPLETH_EQUAL = 'choropleth equal'
 const NYC_HUDSON_STREET = [40.73535, -74.00630]
-const KC_HOSPITAL_HILL = [39.08333, -94.575]
+// const KC_HOSPITAL_HILL = [39.08333, -94.575]
 
 export default class GridualizerExample extends Component {
   state = {
