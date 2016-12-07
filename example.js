@@ -6,14 +6,15 @@ import React, { Component } from 'react'
 import { Map as LeafletMap, TileLayer } from 'react-leaflet'
 import Control from 'react-leaflet-control'
 import { Browser } from 'leaflet'
-import {ReactChoropleth, ReactDot, Choropleth, Dot} from './lib'
+import {ReactChoropleth, ReactDot, Choropleth} from './lib'
 import {createGrid} from 'browsochrones'
 import { render } from 'react-dom'
 
 const DOT = 'dot'
 const CHOROPLETH_QUANTILE = 'choropleth quantile'
 const CHOROPLETH_EQUAL = 'choropleth equal'
-const HUDSON_STREET = [40.73535, -74.00630]
+const NYC_HUDSON_STREET = [40.73535, -74.00630]
+const KC_HOSPITAL_HILL = [39.08333, -94.575]
 
 export default class GridualizerExample extends Component {
   state = {
@@ -39,7 +40,7 @@ export default class GridualizerExample extends Component {
   }
 
   render () {
-    return <LeafletMap center={HUDSON_STREET} zoom={12}>
+    return <LeafletMap center={NYC_HUDSON_STREET} zoom={12}>
       <TileLayer
         url={Browser.retina
           ? 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}@2x.png'
@@ -61,7 +62,6 @@ export default class GridualizerExample extends Component {
       case DOT:
         return <ReactDot
           grid={this.state.grid}
-          placement={Dot.halton({})}
           color='rgb(194, 201, 215)' />
       case CHOROPLETH_QUANTILE:
         return <ReactChoropleth
@@ -72,7 +72,7 @@ export default class GridualizerExample extends Component {
       case CHOROPLETH_EQUAL:
         return <ReactChoropleth
           grid={this.state.grid}
-          breaks={Choropleth.quantile({})}
+          breaks={Choropleth.equal({})}
           colors={['#f1eef6', '#bdc9e1', '#74a9cf', '#2b8cbe', '#045a8d']}
           labels={16} />
     }
