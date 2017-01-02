@@ -4,7 +4,7 @@
   "main": "build/index.js",
   "scripts": {
     "test": "mastarm lint && mastarm test",
-    "prepublish": "mastarm prepublish lib:build",
+    "prepublish": "mastarm prepublish lib:build/lib",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "start": "mastarm build --serve example.js"
   },
