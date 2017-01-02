@@ -24,13 +24,12 @@
   "dependencies": {
     "color": "^0.11.3",
     "lodash.range": "^3.2.0",
-    "mastarm": "^3.2.1",
     "xorshift": "^1.0.0"
   },
   "devDependencies": {
     "browsochrones": "^0.10.0",
     "leaflet": "0.7",
-    "mastarm": "^3.1.1",
+    "mastarm": "^3.2.1",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "react-leaflet": "0.12",
