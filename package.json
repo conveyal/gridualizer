@@ -3,7 +3,7 @@
   "description": "Leaflet-based visualizations of opportunity grids used in Conveyal Analysis software.",
   "main": "build/index.js",
   "scripts": {
-    "test": "mastarm lint",
+    "test": "mastarm lint && mastarm test",
     "prepublish": "mastarm prepublish lib:build",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "start": "mastarm build --serve example.js"
@@ -24,6 +24,7 @@
   "dependencies": {
     "color": "^0.11.3",
     "lodash.range": "^3.2.0",
+    "mastarm": "^3.2.1",
     "xorshift": "^1.0.0"
   },
   "devDependencies": {
