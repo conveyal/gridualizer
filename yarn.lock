@@ -2680,13 +2680,9 @@ https-browserify@~0.0.0:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/https-browserify/-/https-browserify-0.0.1.tgz#3f91365cabe60b77ed0ebba24b454e3e09d95a82"
 
-iconv-lite@0.4.13:
+iconv-lite@0.4.13, iconv-lite@^0.4.13, iconv-lite@~0.4.13:
   version "0.4.13"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.13.tgz#1f88aba4ab0b1508e8312acc39345f36e992e2f2"
-
-iconv-lite@^0.4.13, iconv-lite@~0.4.13:
-  version "0.4.15"
-  resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.15.tgz#fe265a218ac6a57cfe854927e9d04c19825eddeb"
 
 ieee754@^1.1.4:
   version "1.1.8"
@@ -3392,9 +3388,9 @@ lcid@^1.0.0:
   dependencies:
     invert-kv "^1.0.0"
 
-leaflet@0.7:
-  version "0.7.7"
-  resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-0.7.7.tgz#1e352ba54e63d076451fa363c900890cb2cf75ee"
+leaflet@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-1.0.2.tgz#fa4fbcb7844944fc2bfb0bcf9ca0dea13463ca21"
 
 levn@^0.3.0, levn@~0.3.0:
   version "0.3.0"
@@ -3923,7 +3919,7 @@ nopt@3.x, nopt@^3.0.3, nopt@~3.0.1, nopt@~3.0.6:
   dependencies:
     abbrev "1"
 
-normalize-package-data@^1.0.3:
+normalize-package-data@^1.0.3, "normalize-package-data@~1.0.1 || ^2.0.0":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/normalize-package-data/-/normalize-package-data-1.0.3.tgz#8be955b8907af975f1a4584ea8bb9b41492312f5"
   dependencies:
@@ -3931,7 +3927,7 @@ normalize-package-data@^1.0.3:
     github-url-from-username-repo "^1.0.0"
     semver "2 || 3 || 4"
 
-normalize-package-data@^2.3.2, normalize-package-data@^2.3.4, "normalize-package-data@~1.0.1 || ^2.0.0":
+normalize-package-data@^2.3.2, normalize-package-data@^2.3.4:
   version "2.3.5"
   resolved "https://registry.yarnpkg.com/normalize-package-data/-/normalize-package-data-2.3.5.tgz#8d924f142960e1777e7ffe170543631cc7cb02df"
   dependencies:
@@ -4683,9 +4679,9 @@ react-leaflet-control@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/react-leaflet-control/-/react-leaflet-control-1.2.0.tgz#eddde584caeac710ef1d412914030984904a8d0b"
 
-react-leaflet@0.12:
-  version "0.12.3"
-  resolved "https://registry.yarnpkg.com/react-leaflet/-/react-leaflet-0.12.3.tgz#db37372e2f9bca7c45cc6d8c2e720bee7788845b"
+react-leaflet@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-leaflet/-/react-leaflet-1.0.1.tgz#aac306d71b8d9aa24b63487801a2c2f8598885dc"
   dependencies:
     lodash "^4.0.0"
     warning "^3.0.0"
