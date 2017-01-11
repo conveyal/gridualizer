@@ -67,13 +67,25 @@ export default class GridualizerExample extends Component {
         return <ReactChoropleth
           grid={this.state.grid}
           breaks={Choropleth.quantile({})}
-          colors={['#f1eef6', '#bdc9e1', '#74a9cf', '#2b8cbe', '#045a8d']}
+          colors={[
+            'rgba(241, 237, 246, 0.42)',
+            'rgba(188, 200, 224, 0.42)',
+            'rgba(116, 169, 207, 0.42)',
+            'rgba(43, 140, 190, 0.42)',
+            'rgba(4, 90, 142, 0.42)'
+          ]}
           labels={16} />
       case CHOROPLETH_EQUAL:
         return <ReactChoropleth
           grid={this.state.grid}
           breaks={Choropleth.equal({})}
-          colors={['#f1eef6', '#bdc9e1', '#74a9cf', '#2b8cbe', '#045a8d']}
+          colors={[
+            'rgba(241, 237, 246, 0.42)',
+            'rgba(188, 200, 224, 0.42)',
+            'rgba(116, 169, 207, 0.42)',
+            'rgba(43, 140, 190, 0.42)',
+            'rgba(4, 90, 142, 0.42)'
+          ]}
           labels={16} />
     }
   }
