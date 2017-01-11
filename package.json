@@ -3,8 +3,8 @@
   "description": "Leaflet-based visualizations of opportunity grids used in Conveyal Analysis software.",
   "main": "build/index.js",
   "scripts": {
-    "test": "mastarm lint",
-    "prepublish": "mastarm prepublish lib:build",
+    "test": "mastarm lint && mastarm test",
+    "prepublish": "mastarm prepublish lib --outdir build",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "start": "mastarm build --serve example.js"
   },
@@ -22,14 +22,14 @@
   },
   "homepage": "https://github.com/conveyal/gridualizer#readme",
   "dependencies": {
-    "color": "^0.11.3",
+    "d3-color": "^1.0.2",
     "lodash.range": "^3.2.0",
     "xorshift": "^1.0.0"
   },
   "devDependencies": {
     "browsochrones": "^0.10.0",
     "leaflet": "0.7",
-    "mastarm": "^3.1.1",
+    "mastarm": "^3.2.1",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "react-leaflet": "0.12",
