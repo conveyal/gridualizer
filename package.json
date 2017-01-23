@@ -23,6 +23,7 @@
   "homepage": "https://github.com/conveyal/gridualizer#readme",
   "dependencies": {
     "d3-color": "^1.0.2",
+    "d3-scale": "^1.0.4",
     "lodash.range": "^3.2.0",
     "xorshift": "^1.0.0"
   },
