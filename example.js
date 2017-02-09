@@ -6,10 +6,12 @@ import React, { Component } from 'react'
 import { Map as LeafletMap, TileLayer } from 'react-leaflet'
 import Control from 'react-leaflet-control'
 import { Browser } from 'leaflet'
-import {ReactChoropleth, ReactDot, scales} from './lib'
+import {ReactChoropleth, ReactGridMapLayer, scales} from './lib'
 import {createGrid} from 'browsochrones'
 import { render } from 'react-dom'
 import { scaleLog } from 'd3-scale'
+import {BicubicInterpolator, BilinearInterpolator, NearestNeighborInterpolator} from './lib/interpolators'
+import {InterpolatingColorScale} from './lib/color-scales'
 
 const DOT = 'dot'
 const CHOROPLETH_QUANTILE = 'choropleth quantile'
@@ -65,9 +67,10 @@ export default class GridualizerExample extends Component {
   renderGrid () {
     switch (this.state.type) {
       case DOT:
-        return <ReactDot
+        return <ReactGridMapLayer
           grid={this.state.grid}
-          color='rgb(0, 0, 200)' />
+          colorScale={new InterpolatingColorScale([[200, 0, 0, 100, 0], [3000, 0, 0, 150, 200], [25000, 150, 0, 0, 200]])}
+          interpolator={BicubicInterpolator} />
       case CHOROPLETH_QUANTILE:
         return <ReactChoropleth
           grid={this.state.grid}
