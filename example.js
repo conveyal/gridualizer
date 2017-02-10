@@ -6,7 +6,7 @@ import React, { Component } from 'react'
 import { Map as LeafletMap, TileLayer } from 'react-leaflet'
 import Control from 'react-leaflet-control'
 import { Browser } from 'leaflet'
-import {ReactChoropleth, ReactGridMapLayer, scales} from './lib'
+import {ReactChoropleth, ReactGridMapLayer, classifiers} from './lib'
 import {createGrid} from 'browsochrones'
 import { render } from 'react-dom'
 import { scaleLog } from 'd3-scale'
@@ -74,7 +74,7 @@ export default class GridualizerExample extends Component {
       case CHOROPLETH_QUANTILE:
         return <ReactChoropleth
           grid={this.state.grid}
-          breaks={scales.quantile({})}
+          breaks={classifiers.quantile({})}
           colors={[
             'rgba(241, 237, 246, 0.42)',
             'rgba(188, 200, 224, 0.42)',
@@ -86,7 +86,7 @@ export default class GridualizerExample extends Component {
       case CHOROPLETH_EQUAL:
         return <ReactChoropleth
           grid={this.state.grid}
-          breaks={scales.equal({})}
+          breaks={classifiers.equal({})}
           colors={[
             'rgba(241, 237, 246, 0.42)',
             'rgba(188, 200, 224, 0.42)',
@@ -98,7 +98,7 @@ export default class GridualizerExample extends Component {
       case CHOROPLETH_LOG:
         return <ReactChoropleth
           grid={this.state.grid}
-          breaks={scales.equal({ scale: scaleLog().domain([1, this.state.grid.max]).clamp(true) })}
+          breaks={classifiers.equal({ scale: scaleLog().domain([1, this.state.grid.max]).clamp(true) })}
           colors={[
             'rgba(241, 237, 246, 0.42)',
             'rgba(188, 200, 224, 0.42)',
