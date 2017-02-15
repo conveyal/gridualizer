@@ -45,12 +45,23 @@ export default class GridualizerExample extends Component {
     this.setState({ ...this.state, colorizer: colorizers.dither })
   }
 
-  // Applying a scale to a quantile classifier would make no difference, so it takes no configuration.
+  // A hand-tweaked hard-wired classifier as a default
+  customClassifier = () => [1500, 10000, 20000, 35000]
+  jenksClassifier = classifiers.jenks({})
+  // Applying a scale to a quantile classifier would make no difference, so it takes no scale configuration.
   quantileClassifier = classifiers.quantile({})
   // The equal interval classifier defaults to linear scale when constructed with no scale.
   linEqualClassifier = classifiers.equal({})
   // Setting up a log scale must wait until the grid is loaded.
   logEqualClassifier = null
+
+  selectCustom = (e) => {
+    this.setState({ ...this.state, classifier: this.customClassifier })
+  }
+
+  selectJenks = (e) => {
+    this.setState({ ...this.state, classifier: this.jenksClassifier })
+  }
 
   selectQuantile = (e) => {
     this.setState({ ...this.state, classifier: this.quantileClassifier })
@@ -67,7 +78,7 @@ export default class GridualizerExample extends Component {
   async componentWillMount () {
     this.selectBicubic()
     this.selectChoropleth()
-    this.selectQuantile()
+    this.selectCustom()
     const raw = await window.fetch('/example.grid').then(res => res.arrayBuffer())
     this.setState({ ...this.state, grid: createGrid(raw) })
     // The log scale depends on knowing the range of the grid, which is now loaded.
@@ -103,6 +114,10 @@ export default class GridualizerExample extends Component {
             disabled={this.state.colorizer === colorizers.dither}>Dither</button>
           <br />
           <label>Classifier:</label>
+          <button onClick={this.selectCustom}
+            disabled={this.state.classifier === this.customClassifier}>Custom</button>
+          <button onClick={this.selectJenks}
+            disabled={this.state.classifier === this.jenksClassifier}>Jenks</button>
           <button onClick={this.selectQuantile}
             disabled={this.state.classifier === this.quantileClassifier}>Quantile</button>
           <button onClick={this.selectLinEqual}
@@ -116,9 +131,10 @@ export default class GridualizerExample extends Component {
 
   renderGrid () {
     const colors = [
-      [1500, 0, 0, 150, 0],
-      [10000, 0, 0, 150, 127],
-      [50000, 0, 0, 150, 255]
+      [0, 0, 200, 0],
+      [0, 0, 200, 200],
+      [200, 0, 0, 200],
+      [200, 200, 0, 200]
     ]
     // const colors={[
     //   'rgba(241, 237, 246, 0.42)',
@@ -130,11 +146,11 @@ export default class GridualizerExample extends Component {
     // Convert from D3 color format to standard
     // const normalizedColors = colors.map(c => color(c).rgb())
     // Use the classifier to materialze as many break points as we have colors
-    // const breaks = this.state.classifier(this.state.grid, colors.length)
+    const breaks = this.state.classifier(this.state.grid, colors.length)
     return <ReactGridMapLayer
       grid={this.state.grid}
       interpolator={this.state.interpolator}
-      colorizer={this.state.colorizer(colors)} /> // this.state.colorizer(breaks, colors)
+      colorizer={this.state.colorizer(breaks, colors)} />
   }
 
 }
