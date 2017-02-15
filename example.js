@@ -49,7 +49,8 @@ export default class GridualizerExample extends Component {
   customClassifier = () => [1500, 10000, 20000, 35000]
   jenksClassifier = classifiers.jenks({})
   // Applying a scale to a quantile classifier would make no difference, so it takes no scale configuration.
-  quantileClassifier = classifiers.quantile({})
+  // Exclude the huge number of zeros from the classification.
+  quantileClassifier = classifiers.quantile({noDataValue: 0})
   // The equal interval classifier defaults to linear scale when constructed with no scale.
   linEqualClassifier = classifiers.equal({})
   // Setting up a log scale must wait until the grid is loaded.
