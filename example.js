@@ -6,41 +6,74 @@ import React, { Component } from 'react'
 import { Map as LeafletMap, TileLayer } from 'react-leaflet'
 import Control from 'react-leaflet-control'
 import { Browser } from 'leaflet'
-import {ReactChoropleth, ReactGridMapLayer, interpolators, scales, classifiers} from './lib'
-import {createGrid} from 'browsochrones'
+import { ReactGridMapLayer, interpolators, colorizers, classifiers } from './lib'
+import { createGrid } from 'browsochrones'
 import { render } from 'react-dom'
 import { scaleLog } from 'd3-scale'
 
-const DOT = 'dot'
-const CHOROPLETH_QUANTILE = 'choropleth quantile'
-const CHOROPLETH_EQUAL = 'choropleth equal'
-const CHOROPLETH_LOG = 'choropleth log'
 const NYC_HUDSON_STREET = [40.73535, -74.00630]
 // const KC_HOSPITAL_HILL = [39.08333, -94.575]
 
 export default class GridualizerExample extends Component {
+
+  // Initial Redux state
   state = {
-    type: DOT,
     grid: null
   }
 
-  selectDot = (e) => {
-    this.setState({ ...this.state, type: DOT })
+  selectNearest = (e) => {
+    this.setState({ ...this.state, interpolator: interpolators.nearest })
   }
 
-  selectChoroplethQuantile = (e) => {
-    this.setState({ ...this.state, type: CHOROPLETH_QUANTILE })
+  selectBicubic = (e) => {
+    this.setState({ ...this.state, interpolator: interpolators.bicubic })
   }
 
-  selectChoroplethEqual = (e) => {
-    this.setState({ ...this.state, type: CHOROPLETH_EQUAL })
+  selectBilinear = (e) => {
+    this.setState({ ...this.state, interpolator: interpolators.bilinear })
   }
 
-  selectChoroplethLog = (e) => this.setState({ ...this.state, type: CHOROPLETH_LOG })
+  selectChoropleth = (e) => {
+    this.setState({ ...this.state, colorizer: colorizers.choropleth })
+  }
+
+  selectGradient = (e) => {
+    this.setState({ ...this.state, colorizer: colorizers.gradient })
+  }
+
+  selectDither = (e) => {
+    this.setState({ ...this.state, colorizer: colorizers.dither })
+  }
+
+  // Applying a scale to a quantile classifier would make no difference, so it takes no configuration.
+  quantileClassifier = classifiers.quantile({})
+  // The equal interval classifier defaults to linear scale when constructed with no scale.
+  linEqualClassifier = classifiers.equal({})
+  // Setting up a log scale must wait until the grid is loaded.
+  logEqualClassifier = null
+
+  selectQuantile = (e) => {
+    this.setState({ ...this.state, classifier: this.quantileClassifier })
+  }
+
+  selectLinEqual = (e) => {
+    this.setState({ ...this.state, classifier: this.linEqualClassifier })
+  }
+
+  selectLogEqual = (e) => {
+    this.setState({ ...this.state, classifier: this.logEqualClassifier })
+  }
 
   async componentWillMount () {
+    this.selectBicubic()
+    this.selectChoropleth()
+    this.selectQuantile()
     const raw = await window.fetch('/example.grid').then(res => res.arrayBuffer())
-    this.setState({...this.state, grid: createGrid(raw)})
+    this.setState({ ...this.state, grid: createGrid(raw) })
+    // The log scale depends on knowing the range of the grid, which is now loaded.
+    this.logEqualClassifier = classifiers.equal({
+      scale: scaleLog().domain([1, this.state.grid.max]).clamp(true)
+    })
   }
 
   render () {
@@ -53,60 +86,57 @@ export default class GridualizerExample extends Component {
       {this.state.grid && this.renderGrid()}
       <Control position='topright'>
         <div>
-          <button onClick={this.selectDot} disabled={this.state.type === DOT}>Dot</button>
-          <button onClick={this.selectChoroplethQuantile} disabled={this.state.type === CHOROPLETH_QUANTILE}>Choropleth, quantile</button>
-          <button onClick={this.selectChoroplethEqual} disabled={this.state.type === CHOROPLETH_EQUAL}>Choropleth, equal</button>
-          <button onClick={this.selectChoroplethLog} disabled={this.state.type === CHOROPLETH_LOG}>Choropleth, equal in log space</button>
+          <label>Interpolator:</label>
+          <button onClick={this.selectNearest}
+            disabled={this.state.interpolator === interpolators.nearest}>Nearest</button>
+          <button onClick={this.selectBilinear}
+            disabled={this.state.interpolator === interpolators.bilinear}>Bilinear</button>
+          <button onClick={this.selectBicubic}
+            disabled={this.state.interpolator === interpolators.bicubic}>Bicubic</button>
+          <br />
+          <label>Colorizer:</label>
+          <button onClick={this.selectChoropleth}
+            disabled={this.state.colorizer === colorizers.choropleth}>Choropleth</button>
+          <button onClick={this.selectGradient}
+            disabled={this.state.colorizer === colorizers.gradient}>Gradient</button>
+          <button onClick={this.selectDither}
+            disabled={this.state.colorizer === colorizers.dither}>Dither</button>
+          <br />
+          <label>Classifier:</label>
+          <button onClick={this.selectQuantile}
+            disabled={this.state.classifier === this.quantileClassifier}>Quantile</button>
+          <button onClick={this.selectLinEqual}
+            disabled={this.state.classifier === this.linEqualClassifier}>Equal Interval (Lin)</button>
+          <button onClick={this.selectLogEqual}
+            disabled={this.state.classifier === this.logEqualClassifier}>Equal Interval (Log)</button>
         </div>
       </Control>
     </LeafletMap>
   }
 
   renderGrid () {
-    switch (this.state.type) {
-      case DOT:
-        return <ReactGridMapLayer
-          grid={this.state.grid}
-          colorScale={scales.dots([150, 0, 0], 5000)}
-          interpolator={interpolators.nearest} />
-      case CHOROPLETH_QUANTILE:
-        return <ReactChoropleth
-          grid={this.state.grid}
-          breaks={classifiers.quantile({})}
-          colors={[
-            'rgba(241, 237, 246, 0.42)',
-            'rgba(188, 200, 224, 0.42)',
-            'rgba(116, 169, 207, 0.42)',
-            'rgba(43, 140, 190, 0.42)',
-            'rgba(4, 90, 142, 0.42)'
-          ]}
-          labels={16} />
-      case CHOROPLETH_EQUAL:
-        return <ReactChoropleth
-          grid={this.state.grid}
-          breaks={classifiers.equal({})}
-          colors={[
-            'rgba(241, 237, 246, 0.42)',
-            'rgba(188, 200, 224, 0.42)',
-            'rgba(116, 169, 207, 0.42)',
-            'rgba(43, 140, 190, 0.42)',
-            'rgba(4, 90, 142, 0.42)'
-          ]}
-          labels={16} />
-      case CHOROPLETH_LOG:
-        return <ReactChoropleth
-          grid={this.state.grid}
-          breaks={classifiers.equal({ scale: scaleLog().domain([1, this.state.grid.max]).clamp(true) })}
-          colors={[
-            'rgba(241, 237, 246, 0.42)',
-            'rgba(188, 200, 224, 0.42)',
-            'rgba(116, 169, 207, 0.42)',
-            'rgba(43, 140, 190, 0.42)',
-            'rgba(4, 90, 142, 0.42)'
-          ]}
-        />
-    }
+    const colors = [
+      [1500, 0, 0, 150, 0],
+      [10000, 0, 0, 150, 127],
+      [50000, 0, 0, 150, 255]
+    ]
+    // const colors={[
+    //   'rgba(241, 237, 246, 0.42)',
+    //   'rgba(188, 200, 224, 0.42)',
+    //   'rgba(116, 169, 207, 0.42)',
+    //   'rgba( 43, 140, 190, 0.42)',
+    //   'rgba(  4,  90, 142, 0.42)'
+    // ]}
+    // Convert from D3 color format to standard
+    // const normalizedColors = colors.map(c => color(c).rgb())
+    // Use the classifier to materialze as many break points as we have colors
+    // const breaks = this.state.classifier(this.state.grid, colors.length)
+    return <ReactGridMapLayer
+      grid={this.state.grid}
+      interpolator={this.state.interpolator}
+      colorizer={this.state.colorizer(colors)} /> // this.state.colorizer(breaks, colors)
   }
+
 }
 
 render(<GridualizerExample />, document.getElementById('root'))
