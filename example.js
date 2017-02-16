@@ -34,7 +34,6 @@ export default class GridualizerExample extends Component {
     'rgba(241, 237, 246, 0.5)',
     'rgba(188, 200, 224, 0.5)',
     'rgba(116, 169, 207, 0.5)',
-    'rgba( 43, 140, 190, 0.5)',
     'rgba(  4,  90, 142, 0.5)'
   ]
 
