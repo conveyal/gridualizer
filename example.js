@@ -16,16 +16,46 @@ const NYC_HUDSON_STREET = [40.73535, -74.00630]
 
 export default class GridualizerExample extends Component {
 
+  deStijlColors = [
+    'rgba(0, 0, 200, 0.0)',
+    'rgba(0, 0, 200, 0.5)',
+    'rgba(200, 0, 0, 0.5)',
+    'rgba(200, 200, 0, 0.5)'
+  ]
+
+  blueOpacityColors = [
+    'rgba(0, 0, 200, 0.0)',
+    'rgba(0, 0, 200, 0.2)',
+    'rgba(0, 0, 200, 0.4)',
+    'rgba(0, 0, 200, 0.8)'
+  ]
+
+  originalColors = [
+    'rgba(241, 237, 246, 0.5)',
+    'rgba(188, 200, 224, 0.5)',
+    'rgba(116, 169, 207, 0.5)',
+    'rgba( 43, 140, 190, 0.5)',
+    'rgba(  4,  90, 142, 0.5)'
+  ]
+
   // Initial state
   state = {
     grid: null,
-    colors: [
-      'rgba(241, 237, 246, 0.5)',
-      'rgba(188, 200, 224, 0.5)',
-      'rgba(116, 169, 207, 0.5)',
-      'rgba( 43, 140, 190, 0.5)',
-      'rgba(  4,  90, 142, 0.5)'
-    ]
+    interpolator: interpolators.bicubic,
+    colors: this.blueOpacityColors,
+    colorizer: colorizers.choropleth
+  }
+
+  selectDeStijlColors = (e) => {
+    this.setState({ ...this.state, colors: this.deStijlColors })
+  }
+
+  selectBlueOpacityColors = (e) => {
+    this.setState({ ...this.state, colors: this.blueOpacityColors })
+  }
+
+  selectOriginalColors = (e) => {
+    this.setState({ ...this.state, colors: this.originalColors })
   }
 
   selectNearest = (e) => {
@@ -97,9 +127,7 @@ export default class GridualizerExample extends Component {
   }
 
   async componentWillMount () {
-    this.selectBicubic()
-    this.selectChoropleth()
-    this.selectCustom()
+    this.selectCustom() // Note that this one does not depend on the grid being loaded.
     const raw = await window.fetch('/example.grid').then(res => res.arrayBuffer())
     this.setState({ ...this.state, grid: createGrid(raw) })
     // The log scale depends on knowing the range of the grid, which is now loaded.
@@ -118,6 +146,14 @@ export default class GridualizerExample extends Component {
       {this.state.grid && this.renderGrid()}
       <Control position='topright'>
         <div>
+          <label>Colors:</label>
+          <button onClick={this.selectDeStijlColors}
+            disabled={this.state.colors === this.deStijlColors}>De Stijl</button>
+          <button onClick={this.selectBlueOpacityColors}
+            disabled={this.state.colors === this.blueOpacityColors}>Blue Opacity</button>
+          <button onClick={this.selectOriginalColors}
+            disabled={this.state.colors === this.originalColors}>Original</button>
+          <br />
           <label>Interpolator:</label>
           <button onClick={this.selectNearest}
             disabled={this.state.interpolator === interpolators.nearest}>Nearest</button>
