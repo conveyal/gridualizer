@@ -10,7 +10,6 @@ import { ReactGridMapLayer, interpolators, colorizers, classifiers } from './lib
 import { createGrid } from 'browsochrones'
 import { render } from 'react-dom'
 import { scaleLog } from 'd3-scale'
-import { normalizeColors } from './lib/util'
 
 const NYC_HUDSON_STREET = [40.73535, -74.00630]
 // const KC_HOSPITAL_HILL = [39.08333, -94.575]
@@ -20,13 +19,13 @@ export default class GridualizerExample extends Component {
   // Initial state
   state = {
     grid: null,
-    colors: normalizeColors([
+    colors: [
       'rgba(241, 237, 246, 0.5)',
       'rgba(188, 200, 224, 0.5)',
       'rgba(116, 169, 207, 0.5)',
       'rgba( 43, 140, 190, 0.5)',
       'rgba(  4,  90, 142, 0.5)'
-    ])
+    ]
   }
 
   selectNearest = (e) => {
