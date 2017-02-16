@@ -10,15 +10,23 @@ import { ReactGridMapLayer, interpolators, colorizers, classifiers } from './lib
 import { createGrid } from 'browsochrones'
 import { render } from 'react-dom'
 import { scaleLog } from 'd3-scale'
+import { normalizeColors } from './lib/util'
 
 const NYC_HUDSON_STREET = [40.73535, -74.00630]
 // const KC_HOSPITAL_HILL = [39.08333, -94.575]
 
 export default class GridualizerExample extends Component {
 
-  // Initial Redux state
+  // Initial state
   state = {
-    grid: null
+    grid: null,
+    colors: normalizeColors([
+      'rgba(241, 237, 246, 0.5)',
+      'rgba(188, 200, 224, 0.5)',
+      'rgba(116, 169, 207, 0.5)',
+      'rgba( 43, 140, 190, 0.5)',
+      'rgba(  4,  90, 142, 0.5)'
+    ])
   }
 
   selectNearest = (e) => {
@@ -56,24 +64,37 @@ export default class GridualizerExample extends Component {
   // Setting up a log scale must wait until the grid is loaded.
   logEqualClassifier = null
 
+  setClassifierState = (classifier) => {
+    // Use the classifier to materialize as many break points as we have colors.
+    // We have redundant state here: the classifier function and the result of the classification (breaks).
+    // Classification can be slow, so we want to keep the breaks in the state to avoid re-classifying every time
+    // we render the component. But it's also useful to keep the function itself, to decide which button to disable.
+    // It would be better if classification were asynchronous since it can be slow.
+    this.setState({
+      ...this.state,
+      classifier: classifier,
+      breaks: classifier(this.state.grid, this.state.colors.length)
+    })
+  }
+
   selectCustom = (e) => {
-    this.setState({ ...this.state, classifier: this.customClassifier })
+    this.setClassifierState(this.customClassifier)
   }
 
   selectJenks = (e) => {
-    this.setState({ ...this.state, classifier: this.jenksClassifier })
+    this.setClassifierState(this.jenksClassifier)
   }
 
   selectQuantile = (e) => {
-    this.setState({ ...this.state, classifier: this.quantileClassifier })
+    this.setClassifierState(this.quantileClassifier)
   }
 
   selectLinEqual = (e) => {
-    this.setState({ ...this.state, classifier: this.linEqualClassifier })
+    this.setClassifierState(this.linEqualClassifier)
   }
 
   selectLogEqual = (e) => {
-    this.setState({ ...this.state, classifier: this.logEqualClassifier })
+    this.setClassifierState(this.logEqualClassifier)
   }
 
   async componentWillMount () {
@@ -131,29 +152,11 @@ export default class GridualizerExample extends Component {
   }
 
   renderGrid () {
-    const colors = [
-      [0, 0, 200, 0],
-      [0, 0, 200, 200],
-      [200, 0, 0, 200],
-      [200, 200, 0, 200]
-    ]
-    // const colors={[
-    //   'rgba(241, 237, 246, 0.42)',
-    //   'rgba(188, 200, 224, 0.42)',
-    //   'rgba(116, 169, 207, 0.42)',
-    //   'rgba( 43, 140, 190, 0.42)',
-    //   'rgba(  4,  90, 142, 0.42)'
-    // ]}
-    // Convert from D3 color format to standard
-    // const normalizedColors = colors.map(c => color(c).rgb())
-    // Use the classifier to materialze as many break points as we have colors
-    const breaks = this.state.classifier(this.state.grid, colors.length)
     return <ReactGridMapLayer
       grid={this.state.grid}
       interpolator={this.state.interpolator}
-      colorizer={this.state.colorizer(breaks, colors)} />
+      colorizer={this.state.colorizer(this.state.breaks, this.state.colors)} />
   }
-
 }
 
 render(<GridualizerExample />, document.getElementById('root'))
