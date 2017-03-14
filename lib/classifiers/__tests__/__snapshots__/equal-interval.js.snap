@@ -1,0 +1,19 @@
+exports[`classifiers > equal-interval should handle a linear classifier 1`] = `
+Array [
+  200,
+  400,
+  600,
+  800,
+  1000,
+]
+`;
+
+exports[`classifiers > equal-interval should handle a nonlinear classifier 1`] = `
+Array [
+  3.9810717055349727,
+  15.848931924611136,
+  63.095734448019314,
+  251.1886431509581,
+  1000,
+]
+`;
