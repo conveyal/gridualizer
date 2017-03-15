@@ -11,6 +11,7 @@
   "standard": {
     "parser": "babel-eslint"
   },
+  "version": "2.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/conveyal/gridualizer.git"
