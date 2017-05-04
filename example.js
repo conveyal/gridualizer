@@ -78,7 +78,11 @@ export default class GridualizerExample extends Component {
   }
 
   selectDither = (e) => {
-    this.setState({ ...this.state, colorizer: colorizers.dither })
+    this.setState({ ...this.state, colorizer: colorizers.dither, colorizerArgs: [] })
+  }
+
+  selectDitherZoomCorrected = (e) => {
+    this.setState({ colorizer: colorizers.dither, colorizerArgs: [true, 12] })
   }
 
   // A hand-tweaked hard-wired classifier as a default
@@ -128,7 +132,7 @@ export default class GridualizerExample extends Component {
   async componentWillMount () {
     this.selectCustom() // Note that this one does not depend on the grid being loaded.
     const raw = await window.fetch('/example.grid').then(res => res.arrayBuffer())
-    this.setState({ ...this.state, grid: createGrid(raw) })
+    this.setState({ ...this.state, grid: createGrid(raw), colorizerArgs: [] })
     // The log scale depends on knowing the range of the grid, which is now loaded.
     this.logEqualClassifier = classifiers.equal({
       scale: scaleLog().domain([1, this.state.grid.max]).clamp(true)
@@ -167,7 +171,9 @@ export default class GridualizerExample extends Component {
           <button onClick={this.selectGradient}
             disabled={this.state.colorizer === colorizers.gradient}>Gradient</button>
           <button onClick={this.selectDither}
-            disabled={this.state.colorizer === colorizers.dither}>Dither</button>
+            disabled={this.state.colorizer === colorizers.dither && this.state.colorizerArgs.length === 0}>Dither</button>
+          <button onClick={this.selectDitherZoomCorrected}
+            disabled={this.state.colorizer === colorizers.dither && this.state.colorizerArgs.length === 2}>Dither (zoom corrected)</button>
           <br />
           <label>Classifier:</label>
           <button onClick={this.selectCustom}
@@ -189,7 +195,7 @@ export default class GridualizerExample extends Component {
     return <ReactGridMapLayer
       grid={this.state.grid}
       interpolator={this.state.interpolator}
-      colorizer={this.state.colorizer(this.state.breaks, this.state.colors)} />
+      colorizer={this.state.colorizer(this.state.breaks, this.state.colors, ...this.state.colorizerArgs)} />
   }
 }
 
