@@ -65,6 +65,10 @@ export default class GridualizerExample extends Component {
     this.setState({ ...this.state, interpolator: interpolators.bicubic })
   }
 
+  selectSpline = (e) => {
+    this.setState({ ...this.state, interpolator: interpolators.spline })
+  }
+
   selectBilinear = (e) => {
     this.setState({ ...this.state, interpolator: interpolators.bilinear })
   }
@@ -160,6 +164,8 @@ export default class GridualizerExample extends Component {
             disabled={this.state.interpolator === interpolators.bilinear}>Bilinear</button>
           <button onClick={this.selectBicubic}
             disabled={this.state.interpolator === interpolators.bicubic}>Bicubic</button>
+          <button onClick={this.selectSpline}
+            disabled={this.state.interpolator === interpolators.spline}>Spline</button>
           <br />
           <label>Colorizer:</label>
           <button onClick={this.selectChoropleth}
