@@ -83,7 +83,7 @@ export default class GridualizerExample extends Component {
 
   // A hand-tweaked hard-wired classifier as a default
   customClassifier = () => [1500, 10000, 20000, 35000]
-  jenksClassifier = classifiers.jenks({})
+  ckmeansClassifier = classifiers.ckmeans({})
   // Applying a scale to a quantile classifier would make no difference, so it takes no scale configuration.
   // Exclude the huge number of zeros from the classification.
   quantileClassifier = classifiers.quantile({noDataValue: 0})
@@ -109,8 +109,8 @@ export default class GridualizerExample extends Component {
     this.setClassifierState(this.customClassifier)
   }
 
-  selectJenks = (e) => {
-    this.setClassifierState(this.jenksClassifier)
+  selectCkmeans = (e) => {
+    this.setClassifierState(this.ckmeansClassifier)
   }
 
   selectQuantile = (e) => {
@@ -172,8 +172,8 @@ export default class GridualizerExample extends Component {
           <label>Classifier:</label>
           <button onClick={this.selectCustom}
             disabled={this.state.classifier === this.customClassifier}>Custom</button>
-          <button onClick={this.selectJenks}
-            disabled={this.state.classifier === this.jenksClassifier}>Jenks</button>
+          <button onClick={this.selectCkmeans}
+            disabled={this.state.classifier === this.ckmeansClassifier}>Ckmeans</button>
           <button onClick={this.selectQuantile}
             disabled={this.state.classifier === this.quantileClassifier}>Quantile</button>
           <button onClick={this.selectLinEqual}
