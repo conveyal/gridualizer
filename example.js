@@ -85,6 +85,10 @@ export default class GridualizerExample extends Component {
     this.setState({ ...this.state, colorizer: colorizers.dither })
   }
 
+  selectDot = (e) => {
+    this.setState({ ...this.state, colorizer: colorizers.dot })
+  }
+
   // A hand-tweaked hard-wired classifier as a default
   customClassifier = () => [1500, 10000, 20000, 35000]
   ckmeansClassifier = classifiers.ckmeans({})
@@ -174,6 +178,8 @@ export default class GridualizerExample extends Component {
             disabled={this.state.colorizer === colorizers.gradient}>Gradient</button>
           <button onClick={this.selectDither}
             disabled={this.state.colorizer === colorizers.dither}>Dither</button>
+          <button onClick={this.selectDot}
+            disabled={this.state.colorizer === colorizers.dot}>Dot</button>
           <br />
           <label>Classifier:</label>
           <button onClick={this.selectCustom}
