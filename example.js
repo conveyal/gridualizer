@@ -152,45 +152,50 @@ export default class GridualizerExample extends Component {
       {this.state.grid && this.renderGrid()}
       <Control position='topright'>
         <div>
-          <label>Colors:</label>
-          <button onClick={this.selectDeStijlColors}
-            disabled={this.state.colors === this.deStijlColors}>De Stijl</button>
-          <button onClick={this.selectBlueOpacityColors}
-            disabled={this.state.colors === this.blueOpacityColors}>Blue Opacity</button>
-          <button onClick={this.selectOriginalColors}
-            disabled={this.state.colors === this.originalColors}>Original</button>
-          <br />
-          <label>Interpolator:</label>
-          <button onClick={this.selectNearest}
-            disabled={this.state.interpolator === interpolators.nearest}>Nearest</button>
-          <button onClick={this.selectBilinear}
-            disabled={this.state.interpolator === interpolators.bilinear}>Bilinear</button>
-          <button onClick={this.selectBicubic}
-            disabled={this.state.interpolator === interpolators.bicubic}>Bicubic</button>
-          <button onClick={this.selectSpline}
-            disabled={this.state.interpolator === interpolators.spline}>Spline</button>
-          <br />
-          <label>Colorizer:</label>
-          <button onClick={this.selectChoropleth}
-            disabled={this.state.colorizer === colorizers.choropleth}>Choropleth</button>
-          <button onClick={this.selectGradient}
-            disabled={this.state.colorizer === colorizers.gradient}>Gradient</button>
-          <button onClick={this.selectDither}
-            disabled={this.state.colorizer === colorizers.dither}>Dither</button>
-          <button onClick={this.selectDot}
-            disabled={this.state.colorizer === colorizers.dot}>Dot</button>
-          <br />
-          <label>Classifier:</label>
-          <button onClick={this.selectCustom}
-            disabled={this.state.classifier === this.customClassifier}>Custom</button>
-          <button onClick={this.selectCkmeans}
-            disabled={this.state.classifier === this.ckmeansClassifier}>Ckmeans</button>
-          <button onClick={this.selectQuantile}
-            disabled={this.state.classifier === this.quantileClassifier}>Quantile</button>
-          <button onClick={this.selectLinEqual}
-            disabled={this.state.classifier === this.linEqualClassifier}>Equal Interval (Lin)</button>
-          <button onClick={this.selectLogEqual}
-            disabled={this.state.classifier === this.logEqualClassifier}>Equal Interval (Log)</button>
+          <fieldset>
+            <legend>Colors:</legend>
+            <button onClick={this.selectDeStijlColors}
+              disabled={this.state.colors === this.deStijlColors}>De Stijl</button>
+            <button onClick={this.selectBlueOpacityColors}
+              disabled={this.state.colors === this.blueOpacityColors}>Blue Opacity</button>
+            <button onClick={this.selectOriginalColors}
+              disabled={this.state.colors === this.originalColors}>Original</button>
+          </fieldset>
+          <fieldset>
+            <legend>Interpolator:</legend>
+            <button onClick={this.selectNearest}
+              disabled={this.state.interpolator === interpolators.nearest}>Nearest</button>
+            <button onClick={this.selectBilinear}
+              disabled={this.state.interpolator === interpolators.bilinear}>Bilinear</button>
+            <button onClick={this.selectBicubic}
+              disabled={this.state.interpolator === interpolators.bicubic}>Bicubic</button>
+            <button onClick={this.selectSpline}
+              disabled={this.state.interpolator === interpolators.spline}>Spline</button>
+          </fieldset>
+          <fieldset>
+            <legend>Colorizer:</legend>
+            <button onClick={this.selectChoropleth}
+              disabled={this.state.colorizer === colorizers.choropleth}>Choropleth</button>
+            <button onClick={this.selectGradient}
+              disabled={this.state.colorizer === colorizers.gradient}>Gradient</button>
+            <button onClick={this.selectDither}
+              disabled={this.state.colorizer === colorizers.dither}>Dither</button>
+            <button onClick={this.selectDot}
+              disabled={this.state.colorizer === colorizers.dot}>Dot</button>
+          </fieldset>
+          <fieldset>
+            <legend>Classifier:</legend>
+            <button onClick={this.selectCustom}
+              disabled={this.state.classifier === this.customClassifier}>Custom</button>
+            <button onClick={this.selectCkmeans}
+              disabled={this.state.classifier === this.ckmeansClassifier}>Ckmeans</button>
+            <button onClick={this.selectQuantile}
+              disabled={this.state.classifier === this.quantileClassifier}>Quantile</button>
+            <button onClick={this.selectLinEqual}
+              disabled={this.state.classifier === this.linEqualClassifier}>Equal Interval (Lin)</button>
+            <button onClick={this.selectLogEqual}
+              disabled={this.state.classifier === this.logEqualClassifier}>Equal Interval (Log)</button>
+          </fieldset>
         </div>
       </Control>
     </LeafletMap>
