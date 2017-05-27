@@ -15,7 +15,6 @@ const NYC_HUDSON_STREET = [40.73535, -74.00630]
 // const KC_HOSPITAL_HILL = [39.08333, -94.575]
 
 export default class GridualizerExample extends Component {
-
   deStijlColors = [
     'rgba(0, 0, 200, 0.0)',
     'rgba(0, 0, 200, 0.5)',
