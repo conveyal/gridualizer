@@ -1,3 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
 exports[`classifiers > equal-interval should handle a linear classifier 1`] = `
 Array [
   200,
