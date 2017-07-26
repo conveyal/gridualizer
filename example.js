@@ -1,15 +1,44 @@
+// @flow
 /**
  * a demo of gridualizer. Pulls down a grid checked into the repository, and allows you to change visualizations
  */
 
-import React, { Component } from 'react'
-import { Map as LeafletMap, TileLayer } from 'react-leaflet'
+import React, {Component} from 'react'
+import {Map as LeafletMap, MapLayer, TileLayer} from 'react-leaflet'
 import Control from 'react-leaflet-control'
-import { Browser } from 'leaflet'
-import { ReactGridMapLayer, interpolators, colorizers, classifiers } from './lib'
-import { createGrid } from 'browsochrones'
-import { render } from 'react-dom'
-import { scaleLog } from 'd3-scale'
+import {Browser, GridLayer} from 'leaflet'
+import {createGrid} from 'browsochrones'
+import {render} from 'react-dom'
+import {scaleLog} from 'd3-scale'
+
+import createDrawTile from './lib/create-draw-tile'
+
+import {interpolators, colorizers, classifiers} from './lib'
+
+type Props = {
+  colorizer(): void,
+  grid: {},
+  interpolator(): void
+}
+
+class ReactGridMapLayer extends MapLayer<void, Props, void> {
+  createLeafletElement (props: Props): Object {
+    const gridLayer = new GridLayer()
+    gridLayer.createTile = this.createTile
+    return gridLayer
+  }
+
+  componentDidUpdate (prevProps: Props, prevState) {
+    this.leafletElement.redraw()
+  }
+
+  createTile = (coords) => {
+    const canvas = document.createElement('canvas')
+    canvas.width = canvas.height = 256
+    createDrawTile(this.props)(canvas, coords, coords.z)
+    return canvas
+  }
+}
 
 const NYC_HUDSON_STREET = [40.73535, -74.00630]
 // const KC_HOSPITAL_HILL = [39.08333, -94.575]
