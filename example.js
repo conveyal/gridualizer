@@ -33,7 +33,7 @@ class ReactGridMapLayer extends MapLayer<void, Props, void> {
     this.leafletElement.redraw()
   }
 
-  createTile = (coords) => {
+  createTile = coords => {
     const canvas = document.createElement('canvas')
     canvas.width = canvas.height = 256
     createDrawTile(this.props)(canvas, coords, coords.z)
@@ -120,84 +120,142 @@ export default class GridualizerExample extends Component {
 
   render () {
     const {classifier, colors, interpolator} = this.state
-    return <LeafletMap center={NYC_HUDSON_STREET} zoom={12}>
-      <TileLayer
-        url={Browser.retina
-          ? 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}@2x.png'
-          : 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png'}
-        attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>' />
-      {this.props.grid &&
-        <ReactGridMapLayer
-          grid={this.props.grid}
-          interpolator={interpolator}
-          colorizer={this.state.colorizer(this.state.breaks, colors)}
+    return (
+      <LeafletMap center={NYC_HUDSON_STREET} zoom={12}>
+        <TileLayer
+          url={
+            Browser.retina
+              ? 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}@2x.png'
+              : 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png'
+          }
+          attribution='&copy; <a href=&quot;http://www.openstreetmap.org/copyright&quot;>OpenStreetMap</a> contributors, &copy; <a href=&quot;https://carto.com/attributions&quot;>CARTO</a>'
+        />
+        {this.props.grid &&
+          <ReactGridMapLayer
+            grid={this.props.grid}
+            interpolator={interpolator}
+            colorizer={this.state.colorizer(this.state.breaks, colors)}
           />}
-      <Control position='topright'>
-        <div>
-          <fieldset>
-            <legend>Colors:</legend>
-            <button
-              onClick={this.selectDeStijlColors}
-              disabled={colors === deStijlColors}>De Stijl</button>
-            <button
-              onClick={this.selectBlueOpacityColors}
-              disabled={colors === blueOpacityColors}>Blue Opacity</button>
-            <button
-              onClick={this.selectOriginalColors}
-              disabled={colors === originalColors}>Original</button>
-          </fieldset>
-          <fieldset>
-            <legend>Interpolator:</legend>
-            <button onClick={this.selectNearest}
-              disabled={interpolator === interpolators.nearest}>Nearest</button>
-            <button onClick={this.selectBilinear}
-              disabled={interpolator === interpolators.bilinear}>Bilinear</button>
-            <button onClick={this.selectBicubic}
-              disabled={interpolator === interpolators.bicubic}>Bicubic</button>
-            <button onClick={this.selectSpline}
-              disabled={interpolator === interpolators.spline}>Spline</button>
-          </fieldset>
-          <fieldset>
-            <legend>Colorizer:</legend>
-            <button onClick={this.selectChoropleth}
-              disabled={this.state.colorizer === colorizers.choropleth}>Choropleth</button>
-            <button onClick={this.selectGradient}
-              disabled={this.state.colorizer === colorizers.gradient}>Gradient</button>
-            <button onClick={this.selectDither}
-              disabled={this.state.colorizer === colorizers.dither}>Dither</button>
-            <button onClick={this.selectDot}
-              disabled={this.state.colorizer === colorizers.dot}>Dot</button>
-          </fieldset>
-          <fieldset>
-            <legend>Classifier:</legend>
-            <button
-              disabled={classifier === this.customClassifier}
-              onClick={this.selectCustom}>Custom</button>
-            <button
-              disabled={classifier === this.ckmeansClassifier}
-              onClick={this.selectCkmeans}>Ckmeans</button>
-            <button
-              disabled={classifier === this.quantileClassifier}
-              onClick={this.selectQuantile}>Quantile</button>
-            <button
-              disabled={classifier === this.linEqualClassifier}
-              onClick={this.selectLinEqual}>Equal Interval (Lin)</button>
-            <button
-              disabled={classifier === this.logEqualClassifier}
-              onClick={this.selectLogEqual}>Equal Interval (Log)</button>
-          </fieldset>
-        </div>
-      </Control>
-    </LeafletMap>
+        <Control position='topright'>
+          <div>
+            <fieldset>
+              <legend>Colors:</legend>
+              <button
+                onClick={this.selectDeStijlColors}
+                disabled={colors === deStijlColors}
+              >
+                De Stijl
+              </button>
+              <button
+                onClick={this.selectBlueOpacityColors}
+                disabled={colors === blueOpacityColors}
+              >
+                Blue Opacity
+              </button>
+              <button
+                onClick={this.selectOriginalColors}
+                disabled={colors === originalColors}
+              >
+                Original
+              </button>
+            </fieldset>
+            <fieldset>
+              <legend>Interpolator:</legend>
+              <button
+                onClick={this.selectNearest}
+                disabled={interpolator === interpolators.nearest}
+              >
+                Nearest
+              </button>
+              <button
+                onClick={this.selectBilinear}
+                disabled={interpolator === interpolators.bilinear}
+              >
+                Bilinear
+              </button>
+              <button
+                onClick={this.selectBicubic}
+                disabled={interpolator === interpolators.bicubic}
+              >
+                Bicubic
+              </button>
+              <button
+                onClick={this.selectSpline}
+                disabled={interpolator === interpolators.spline}
+              >
+                Spline
+              </button>
+            </fieldset>
+            <fieldset>
+              <legend>Colorizer:</legend>
+              <button
+                onClick={this.selectChoropleth}
+                disabled={this.state.colorizer === colorizers.choropleth}
+              >
+                Choropleth
+              </button>
+              <button
+                onClick={this.selectGradient}
+                disabled={this.state.colorizer === colorizers.gradient}
+              >
+                Gradient
+              </button>
+              <button
+                onClick={this.selectDither}
+                disabled={this.state.colorizer === colorizers.dither}
+              >
+                Dither
+              </button>
+              <button
+                onClick={this.selectDot}
+                disabled={this.state.colorizer === colorizers.dot}
+              >
+                Dot
+              </button>
+            </fieldset>
+            <fieldset>
+              <legend>Classifier:</legend>
+              <button
+                disabled={classifier === this.customClassifier}
+                onClick={this.selectCustom}
+              >
+                Custom
+              </button>
+              <button
+                disabled={classifier === this.ckmeansClassifier}
+                onClick={this.selectCkmeans}
+              >
+                Ckmeans
+              </button>
+              <button
+                disabled={classifier === this.quantileClassifier}
+                onClick={this.selectQuantile}
+              >
+                Quantile
+              </button>
+              <button
+                disabled={classifier === this.linEqualClassifier}
+                onClick={this.selectLinEqual}
+              >
+                Equal Interval (Lin)
+              </button>
+              <button
+                disabled={classifier === this.logEqualClassifier}
+                onClick={this.selectLogEqual}
+              >
+                Equal Interval (Log)
+              </button>
+            </fieldset>
+          </div>
+        </Control>
+      </LeafletMap>
+    )
   }
 }
 
-window
-  .fetch('/example.grid')
-  .then(res => res.arrayBuffer())
-  .then((raw) => {
-    render(
-      <GridualizerExample grid={createGrid(raw)} />,
-      document.getElementById('root')
-    )
-  })
+window.fetch('/example.grid').then(res => res.arrayBuffer()).then(raw => {
+  render(
+    <GridualizerExample grid={createGrid(raw)} />,
+    document.getElementById('root')
+  )
+})
