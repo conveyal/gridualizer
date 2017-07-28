@@ -2,6 +2,7 @@
   "name": "@conveyal/gridualizer",
   "description": "Leaflet-based visualizations of opportunity grids used in Conveyal Analysis software.",
   "main": "build/index.js",
+  "version": "2.1.0",
   "scripts": {
     "test": "mastarm lint && mastarm flow && mastarm test",
     "prepublish": "mastarm prepublish lib --outdir build",
