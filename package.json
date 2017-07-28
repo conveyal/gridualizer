@@ -3,8 +3,10 @@
   "description": "Leaflet-based visualizations of opportunity grids used in Conveyal Analysis software.",
   "main": "build/index.js",
   "scripts": {
-    "test": "mastarm lint && mastarm test",
+    "test": "mastarm lint && mastarm flow && mastarm test",
     "prepublish": "mastarm prepublish lib --outdir build",
+    "prestart": "yarn",
+    "pretest": "yarn",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "start": "mastarm build --serve example.js"
   },
@@ -22,20 +24,20 @@
   },
   "homepage": "https://github.com/conveyal/gridualizer#readme",
   "dependencies": {
-    "d3-color": "^1.0.2",
-    "d3-scale": "^1.0.4",
-    "lodash.range": "^3.2.0",
-    "xorshift": "^1.0.0",
-    "simple-statistics": "4.1.0"
+    "d3-color": "^1.0.3",
+    "d3-scale": "^1.0.6",
+    "lodash": "^4.17.4",
+    "simple-statistics": "4.1.0",
+    "xorshift": "^1.1.0"
   },
   "devDependencies": {
-    "browsochrones": "^0.10.0",
-    "leaflet": "0.7",
-    "mastarm": "^3.2.1",
-    "react": "^15.4.1",
-    "react-dom": "^15.4.1",
-    "react-leaflet": "0.12",
-    "react-leaflet-control": "^1.2.0",
-    "semantic-release": "^4.3.5"
+    "browsochrones": "^1.0.0",
+    "leaflet": "^1.1.0",
+    "mastarm": "^3.11.0",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-leaflet": "^1.4.1",
+    "react-leaflet-control": "^1.4.0",
+    "semantic-release": "^6.3.6"
   }
 }

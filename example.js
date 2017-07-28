@@ -1,93 +1,71 @@
+// @flow
 /**
  * a demo of gridualizer. Pulls down a grid checked into the repository, and allows you to change visualizations
  */
 
-import React, { Component } from 'react'
-import { Map as LeafletMap, TileLayer } from 'react-leaflet'
+import React, {Component} from 'react'
+import {Map as LeafletMap, MapLayer, TileLayer} from 'react-leaflet'
 import Control from 'react-leaflet-control'
-import { Browser } from 'leaflet'
-import { ReactGridMapLayer, interpolators, colorizers, classifiers } from './lib'
-import { createGrid } from 'browsochrones'
-import { render } from 'react-dom'
-import { scaleLog } from 'd3-scale'
+import {Browser, GridLayer} from 'leaflet'
+import {createGrid} from 'browsochrones'
+import {render} from 'react-dom'
+import {scaleLog} from 'd3-scale'
+
+import classifiers from './lib/classifiers'
+import colorizers from './lib/colorizers'
+import createDrawTile from './lib/create-draw-tile'
+import interpolators from './lib/interpolators'
+
+type Props = {
+  colorizer(): void,
+  grid: {},
+  interpolator(): void
+}
+
+class ReactGridMapLayer extends MapLayer<void, Props, void> {
+  createLeafletElement (props: Props): Object {
+    const gridLayer = new GridLayer()
+    gridLayer.createTile = this.createTile
+    return gridLayer
+  }
+
+  componentDidUpdate (prevProps: Props, prevState) {
+    this.leafletElement.redraw()
+  }
+
+  createTile = (coords) => {
+    const canvas = document.createElement('canvas')
+    canvas.width = canvas.height = 256
+    createDrawTile(this.props)(canvas, coords, coords.z)
+    return canvas
+  }
+}
 
 const NYC_HUDSON_STREET = [40.73535, -74.00630]
 // const KC_HOSPITAL_HILL = [39.08333, -94.575]
 
+const deStijlColors = [
+  'rgba(0, 0, 200, 0.0)',
+  'rgba(0, 0, 200, 0.5)',
+  'rgba(200, 0, 0, 0.5)',
+  'rgba(200, 200, 0, 0.5)'
+]
+
+const blueOpacityColors = [
+  'rgba(0, 0, 200, 0.0)',
+  'rgba(0, 0, 200, 0.2)',
+  'rgba(0, 0, 200, 0.4)',
+  'rgba(0, 0, 200, 0.8)'
+]
+
+const originalColors = [
+  'rgba(241, 237, 246, 0.5)',
+  'rgba(188, 200, 224, 0.5)',
+  'rgba(116, 169, 207, 0.5)',
+  'rgba(  4,  90, 142, 0.5)'
+]
+
 export default class GridualizerExample extends Component {
-  deStijlColors = [
-    'rgba(0, 0, 200, 0.0)',
-    'rgba(0, 0, 200, 0.5)',
-    'rgba(200, 0, 0, 0.5)',
-    'rgba(200, 200, 0, 0.5)'
-  ]
-
-  blueOpacityColors = [
-    'rgba(0, 0, 200, 0.0)',
-    'rgba(0, 0, 200, 0.2)',
-    'rgba(0, 0, 200, 0.4)',
-    'rgba(0, 0, 200, 0.8)'
-  ]
-
-  originalColors = [
-    'rgba(241, 237, 246, 0.5)',
-    'rgba(188, 200, 224, 0.5)',
-    'rgba(116, 169, 207, 0.5)',
-    'rgba(  4,  90, 142, 0.5)'
-  ]
-
-  // Initial state
-  state = {
-    grid: null,
-    interpolator: interpolators.bicubic,
-    colors: this.blueOpacityColors,
-    colorizer: colorizers.choropleth
-  }
-
-  selectDeStijlColors = (e) => {
-    this.setState({ ...this.state, colors: this.deStijlColors })
-  }
-
-  selectBlueOpacityColors = (e) => {
-    this.setState({ ...this.state, colors: this.blueOpacityColors })
-  }
-
-  selectOriginalColors = (e) => {
-    this.setState({ ...this.state, colors: this.originalColors })
-  }
-
-  selectNearest = (e) => {
-    this.setState({ ...this.state, interpolator: interpolators.nearest })
-  }
-
-  selectBicubic = (e) => {
-    this.setState({ ...this.state, interpolator: interpolators.bicubic })
-  }
-
-  selectSpline = (e) => {
-    this.setState({ ...this.state, interpolator: interpolators.spline })
-  }
-
-  selectBilinear = (e) => {
-    this.setState({ ...this.state, interpolator: interpolators.bilinear })
-  }
-
-  selectChoropleth = (e) => {
-    this.setState({ ...this.state, colorizer: colorizers.choropleth })
-  }
-
-  selectGradient = (e) => {
-    this.setState({ ...this.state, colorizer: colorizers.gradient })
-  }
-
-  selectDither = (e) => {
-    this.setState({ ...this.state, colorizer: colorizers.dither })
-  }
-
-  selectDot = (e) => {
-    this.setState({ ...this.state, colorizer: colorizers.dot })
-  }
-
   // A hand-tweaked hard-wired classifier as a default
   customClassifier = () => [1500, 10000, 20000, 35000]
   ckmeansClassifier = classifiers.ckmeans({})
@@ -97,80 +75,87 @@ export default class GridualizerExample extends Component {
   // The equal interval classifier defaults to linear scale when constructed with no scale.
   linEqualClassifier = classifiers.equal({})
   // Setting up a log scale must wait until the grid is loaded.
-  logEqualClassifier = null
+  logEqualClassifier = classifiers.equal({
+    scale: scaleLog().domain([1, this.props.grid.max]).clamp(true)
+  })
 
-  setClassifierState = (classifier) => {
+  // Initial state
+  state = {
+    breaks: this.customClassifier(this.props.grid, blueOpacityColors.length),
+    classifier: this.ckmeansClassifier,
+    colors: blueOpacityColors,
+    colorizer: colorizers.choropleth,
+    interpolator: interpolators.bicubic
+  }
+
+  selectDeStijlColors = () => this.setState({colors: deStijlColors})
+  selectBlueOpacityColors = () => this.setState({colors: blueOpacityColors})
+  selectOriginalColors = () => this.setState({colors: originalColors})
+  selectNearest = () => this.setState({interpolator: interpolators.nearest})
+  selectBicubic = () => this.setState({interpolator: interpolators.bicubic})
+  selectSpline = () => this.setState({interpolator: interpolators.spline})
+  selectBilinear = () => this.setState({interpolator: interpolators.bilinear})
+  selectChoropleth = () => this.setState({colorizer: colorizers.choropleth})
+  selectGradient = () => this.setState({colorizer: colorizers.gradient})
+  selectDither = () => this.setState({colorizer: colorizers.dither})
+  selectDot = () => this.setState({colorizer: colorizers.dot})
+
+  setClassifierState = (classifier: (Object, number) => number[]) => {
     // Use the classifier to materialize as many break points as we have colors.
     // We have redundant state here: the classifier function and the result of the classification (breaks).
     // Classification can be slow, so we want to keep the breaks in the state to avoid re-classifying every time
     // we render the component. But it's also useful to keep the function itself, to decide which button to disable.
     // It would be better if classification were asynchronous since it can be slow.
     this.setState({
-      ...this.state,
-      classifier: classifier,
-      breaks: classifier(this.state.grid, this.state.colors.length)
+      classifier,
+      breaks: classifier(this.props.grid, this.state.colors.length)
     })
   }
 
-  selectCustom = (e) => {
-    this.setClassifierState(this.customClassifier)
-  }
-
-  selectCkmeans = (e) => {
-    this.setClassifierState(this.ckmeansClassifier)
-  }
-
-  selectQuantile = (e) => {
-    this.setClassifierState(this.quantileClassifier)
-  }
-
-  selectLinEqual = (e) => {
-    this.setClassifierState(this.linEqualClassifier)
-  }
-
-  selectLogEqual = (e) => {
-    this.setClassifierState(this.logEqualClassifier)
-  }
-
-  async componentWillMount () {
-    this.selectCustom() // Note that this one does not depend on the grid being loaded.
-    const raw = await window.fetch('/example.grid').then(res => res.arrayBuffer())
-    this.setState({ ...this.state, grid: createGrid(raw) })
-    // The log scale depends on knowing the range of the grid, which is now loaded.
-    this.logEqualClassifier = classifiers.equal({
-      scale: scaleLog().domain([1, this.state.grid.max]).clamp(true)
-    })
-  }
+  selectCustom = () => this.setClassifierState(this.customClassifier)
+  selectCkmeans = () => this.setClassifierState(this.ckmeansClassifier)
+  selectQuantile = () => this.setClassifierState(this.quantileClassifier)
+  selectLinEqual = () => this.setClassifierState(this.linEqualClassifier)
+  selectLogEqual = () => this.setClassifierState(this.logEqualClassifier)
 
   render () {
+    const {classifier, colors, interpolator} = this.state
     return <LeafletMap center={NYC_HUDSON_STREET} zoom={12}>
       <TileLayer
         url={Browser.retina
           ? 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}@2x.png'
           : 'https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png'}
         attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>' />
-      {this.state.grid && this.renderGrid()}
+      {this.props.grid &&
+        <ReactGridMapLayer
+          grid={this.props.grid}
+          interpolator={interpolator}
+          colorizer={this.state.colorizer(this.state.breaks, colors)}
+          />}
       <Control position='topright'>
         <div>
           <fieldset>
             <legend>Colors:</legend>
-            <button onClick={this.selectDeStijlColors}
-              disabled={this.state.colors === this.deStijlColors}>De Stijl</button>
-            <button onClick={this.selectBlueOpacityColors}
-              disabled={this.state.colors === this.blueOpacityColors}>Blue Opacity</button>
-            <button onClick={this.selectOriginalColors}
-              disabled={this.state.colors === this.originalColors}>Original</button>
+            <button
+              onClick={this.selectDeStijlColors}
+              disabled={colors === deStijlColors}>De Stijl</button>
+            <button
+              onClick={this.selectBlueOpacityColors}
+              disabled={colors === blueOpacityColors}>Blue Opacity</button>
+            <button
+              onClick={this.selectOriginalColors}
+              disabled={colors === originalColors}>Original</button>
           </fieldset>
           <fieldset>
             <legend>Interpolator:</legend>
             <button onClick={this.selectNearest}
-              disabled={this.state.interpolator === interpolators.nearest}>Nearest</button>
+              disabled={interpolator === interpolators.nearest}>Nearest</button>
             <button onClick={this.selectBilinear}
-              disabled={this.state.interpolator === interpolators.bilinear}>Bilinear</button>
+              disabled={interpolator === interpolators.bilinear}>Bilinear</button>
             <button onClick={this.selectBicubic}
-              disabled={this.state.interpolator === interpolators.bicubic}>Bicubic</button>
+              disabled={interpolator === interpolators.bicubic}>Bicubic</button>
             <button onClick={this.selectSpline}
-              disabled={this.state.interpolator === interpolators.spline}>Spline</button>
+              disabled={interpolator === interpolators.spline}>Spline</button>
           </fieldset>
           <fieldset>
             <legend>Colorizer:</legend>
@@ -185,28 +170,34 @@ export default class GridualizerExample extends Component {
           </fieldset>
           <fieldset>
             <legend>Classifier:</legend>
-            <button onClick={this.selectCustom}
-              disabled={this.state.classifier === this.customClassifier}>Custom</button>
-            <button onClick={this.selectCkmeans}
-              disabled={this.state.classifier === this.ckmeansClassifier}>Ckmeans</button>
-            <button onClick={this.selectQuantile}
-              disabled={this.state.classifier === this.quantileClassifier}>Quantile</button>
-            <button onClick={this.selectLinEqual}
-              disabled={this.state.classifier === this.linEqualClassifier}>Equal Interval (Lin)</button>
-            <button onClick={this.selectLogEqual}
-              disabled={this.state.classifier === this.logEqualClassifier}>Equal Interval (Log)</button>
+            <button
+              disabled={classifier === this.customClassifier}
+              onClick={this.selectCustom}>Custom</button>
+            <button
+              disabled={classifier === this.ckmeansClassifier}
+              onClick={this.selectCkmeans}>Ckmeans</button>
+            <button
+              disabled={classifier === this.quantileClassifier}
+              onClick={this.selectQuantile}>Quantile</button>
+            <button
+              disabled={classifier === this.linEqualClassifier}
+              onClick={this.selectLinEqual}>Equal Interval (Lin)</button>
+            <button
+              disabled={classifier === this.logEqualClassifier}
+              onClick={this.selectLogEqual}>Equal Interval (Log)</button>
           </fieldset>
         </div>
       </Control>
     </LeafletMap>
   }
-
-  renderGrid () {
-    return <ReactGridMapLayer
-      grid={this.state.grid}
-      interpolator={this.state.interpolator}
-      colorizer={this.state.colorizer(this.state.breaks, this.state.colors)} />
-  }
 }
 
-render(<GridualizerExample />, document.getElementById('root'))
+window
+  .fetch('/example.grid')
+  .then(res => res.arrayBuffer())
+  .then((raw) => {
+    render(
+      <GridualizerExample grid={createGrid(raw)} />,
+      document.getElementById('root')
+    )
+  })
