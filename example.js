@@ -193,7 +193,7 @@ export default class GridualizerExample extends Component {
 }
 
 window
-  .fetch('/example.grid')
+  .fetch('example.grid')
   .then(res => res.arrayBuffer())
   .then((raw) => {
     render(
