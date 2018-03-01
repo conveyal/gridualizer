@@ -1,1 +1,0 @@
-{"version":3,"sources":["mock-data.js"],"names":["mockGrid","min","max","data"],"mappings":";;;;;;;AAAA;;;;;;AAEO,IAAMA,8BAAW;AACtBC,OAAK,CADiB;AAEtBC,OAAK,IAFiB;AAGtBC,QAAM,qBAAM,CAAN,EAAS,IAAT;AAHgB,CAAjB","file":"mock-data.js","sourcesContent":["import range from 'lodash/range'\n\nexport const mockGrid = {\n  min: 0,\n  max: 1000,\n  data: range(0, 1001)\n}\n"]}
